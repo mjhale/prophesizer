@@ -1106,7 +1106,10 @@ namespace SIBR
 					}
 					catch (JsonException e)
 					{
-						ConsoleOrWebhook($"Exception: ChroniclerV2Query deserialization failed");
+						ConsoleOrWebhook(
+							$"Exception: ChroniclerV2Query deserialization failed:\n" +
+							$"```{JsonSerializer.Serialize(item, new JsonSerializerOptions { WriteIndented = true })}```"
+						);
 						Console.WriteLine($"Exception message: ${e.Message}");
 					}
 				}
@@ -1166,7 +1169,7 @@ namespace SIBR
 				}
 				catch (Exception e)
 				{
-					ConsoleOrWebhook($"Exception: ChroniclerV2Query failed during page `{query}`");
+					ConsoleOrWebhook($"Exception: ChroniclerV2Query failed while querying `{query}`.");
 					Console.WriteLine($"Exception message: {e.Message}");
 				}
 
@@ -1190,7 +1193,7 @@ namespace SIBR
 					}
 					catch (Exception e)
 					{
-						ConsoleOrWebhook($"Exception: Rolling back transaction savepoint for ${type} at timestamp ${dbTimestamp.Value}.");
+						ConsoleOrWebhook($"Exception: Rolling back transaction savepoint while processing items for `{query}`.");
 						Console.WriteLine($"Exception message: {e.Message}");
 						await transaction.RollbackAsync(lastSeenTime.ToString());
 						break;
